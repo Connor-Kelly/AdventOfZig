@@ -80,7 +80,7 @@ pub fn part2(alloc: std.mem.Allocator, input: []u8) !u32 {
     return @intCast(count);
 }
 
-test "day2smol" {
+test "day1smolpart2" {
     const alloc = testing.allocator;
     const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/day1/small.txt", std.math.maxInt(u32));
     defer alloc.free(inputs_string);
@@ -89,7 +89,7 @@ test "day2smol" {
     try testing.expectEqual(diff, 31);
 }
 
-test "day2main" {
+test "day2mainpart2" {
     const alloc = testing.allocator;
     const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/day1/main.txt", std.math.maxInt(u32));
     defer alloc.free(inputs_string);
