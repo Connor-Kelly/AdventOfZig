@@ -34,7 +34,7 @@ pub fn part1(alloc: std.mem.Allocator, input: []u8) !u32 {
 
 test "day1smol" {
     const alloc = testing.allocator;
-    const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/day1/small.txt", std.math.maxInt(u32));
+    const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/2024/day1/small.txt", std.math.maxInt(u32));
     defer alloc.free(inputs_string);
 
     const diff = try part1(alloc, inputs_string);
@@ -43,7 +43,7 @@ test "day1smol" {
 
 test "day1main" {
     const alloc = testing.allocator;
-    const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/day1/main.txt", std.math.maxInt(u32));
+    const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/2024/day1/main.txt", std.math.maxInt(u32));
     defer alloc.free(inputs_string);
 
     const diff = try part1(alloc, inputs_string);
@@ -82,7 +82,7 @@ pub fn part2(alloc: std.mem.Allocator, input: []u8) !u32 {
 
 test "day1smolpart2" {
     const alloc = testing.allocator;
-    const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/day1/small.txt", std.math.maxInt(u32));
+    const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/2024/day1/small.txt", std.math.maxInt(u32));
     defer alloc.free(inputs_string);
 
     const diff = try part2(alloc, inputs_string);
@@ -91,7 +91,7 @@ test "day1smolpart2" {
 
 test "day2mainpart2" {
     const alloc = testing.allocator;
-    const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/day1/main.txt", std.math.maxInt(u32));
+    const inputs_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/2024/day1/main.txt", std.math.maxInt(u32));
     defer alloc.free(inputs_string);
 
     const diff = try part2(alloc, inputs_string);
