@@ -1,0 +1,25 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Debug Main",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/zig-out/bin/AdventOfZig",
+			"preLaunchTask": "build",
+			"MIMode": "gdb",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"name": "Debug Test",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/zig-out/bin/debug-test",
+			"preLaunchTask": "build-test",
+			"MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+			"cwd": "${workspaceFolder}"
+		}
+	]
+}
