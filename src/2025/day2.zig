@@ -1,36 +1,16 @@
 const std = @import("std");
 const testing = std.testing;
 
-fn isInvalidNumber(alloci: std.mem.Allocator, number: u128) !bool {
-    _ = alloci;
-    const alloc = std.testing.allocator;
-    // _ = alloc;
-
-    // const f: f32 = @floatFromInt(number);
-    // var power: u32 = @intFromFloat(@floor(@log10(f) / 2.0));
-    // power = power;
-    // // power = power + 1;
-
-    // const pow = std.math.pow;
-    // const upperhalf = number / pow(u32, 10, power );
-    // const lowerhalf = @mod(number, pow(u32, 10, power + 1));
-    // std.debug.print("n: {d}\n", .{number});
-    // std.debug.print("  pow: {d}, uh: {d}, lh: {d}\n", .{ power, upperhalf, lowerhalf });
-    // if (@mod(power, 2) == 0) return false;
-    // return upperhalf == lowerhalf;
+fn isInvalidNumber(alloc: std.mem.Allocator, number: u128) !bool {
     const numString = try std.fmt.allocPrint(alloc, "{d}", .{number});
-    // std.debug.print("ns: |{s}|\n", .{numString});
     defer alloc.free(numString);
     index: for (1..numString.len) |i| {
         var splits = std.mem.splitSequence(u8, numString, numString[0..i]);
-        // std.debug.print("i: {d} - {any}\n", .{i, splits});
         var numEmpties: usize = 0;
         while (splits.next()) |l| {
-            // std.debug.print("\tl: |{s}|\n", .{l});
             if (l.len > 0) continue :index;
             numEmpties += 1;
             if (numEmpties > 3) continue :index;
-            // if (splits.rest().len > numString.len / 2) continue :index;
         }
         return true;
     }
@@ -62,11 +42,9 @@ test "valid numbers are valid" {
 }
 
 fn computeInvalidsInLine(alloc: std.mem.Allocator, iterMutex: *std.Thread.Mutex, lineIter: *std.mem.SplitIterator(u8, .scalar), count: *std.atomic.Value(u128)) void {
-    // std.Thread.Mutex.lock(self: *Mutex)
     while (true) {
         iterMutex.lock();
         const line = lineIter.next();
-        // std.debug.print("line: {any}\n", .{line});
         iterMutex.unlock();
         if (line == null) {
             return;
@@ -75,8 +53,6 @@ fn computeInvalidsInLine(alloc: std.mem.Allocator, iterMutex: *std.Thread.Mutex,
         var nums = std.mem.splitScalar(u8, line.?, '-');
         const first = nums.next().?;
         const last = nums.next().?;
-        // std.debug.print("{s}\n", .{line.?});
-        // are ranges always usize?
         var number = std.fmt.parseInt(u128, first, 10) catch {
             return;
         };
@@ -85,30 +61,20 @@ fn computeInvalidsInLine(alloc: std.mem.Allocator, iterMutex: *std.Thread.Mutex,
         };
         while (number <= end) {
             defer number += 1;
-            // _ = alloc.load(.acquire);
-            // defer _ = alloc.load(.release);
             if (isInvalidNumber(alloc, number) catch {
                 return;
             }) {
-                // std.debug.print("invalid number: {d}\n", .{number});
                 _ = count.fetchAdd(number, .monotonic);
-                // totalInvalid += @intCast(number);
             }
         }
-        // std.debug.print("end\n", .{});
     }
-    // while (lineIter.next()) |line| {
-    // }
 }
 
 fn part1(alloc: std.mem.Allocator, input: []const u8) !u128 {
-    // const totalInvalid: u32 = 0;
     var count = std.atomic.Value(u128){ .raw = 0 };
     var lines = std.mem.splitScalar(u8, input, ',');
     var iterMutex = std.Thread.Mutex{};
-    // var atomicAlloc = std.atomic.Value(std.mem.Allocator){ .raw = alloc };
     const cpuCount = try std.Thread.getCpuCount();
-    // var wg = std.Thread.WaitGroup{};
     var threads = try std.ArrayList(std.Thread).initCapacity(alloc, cpuCount);
     defer threads.deinit(alloc);
     for (0..cpuCount) |_| {
@@ -119,12 +85,6 @@ fn part1(alloc: std.mem.Allocator, input: []const u8) !u128 {
     for (threads.items) |thread| {
         thread.join();
     }
-
-    // spawnManager(computeInvalidsInLine, .{ alloc, &iterMutex, &lines, &count });
-    // wg.spawnManager(computeInvalidsInLine, .{ alloc, &iterMutex, &lines, &count });
-    // wg.start();
-    // wg.finish();
-    // std.debug.print("wg finished", .{});
 
     return count.raw;
 }
@@ -147,9 +107,7 @@ test "part1main" {
     try testing.expectEqual(43952536386, sum);
 }
 
-fn isInvalidNumberP2(alloci: std.mem.Allocator, number: u128) !bool {
-    _ = alloci;
-    const alloc = std.testing.allocator;
+fn isInvalidNumberP2(alloc: std.mem.Allocator, number: u128) !bool {
     const numString = try std.fmt.allocPrint(alloc, "{d}", .{number});
     defer alloc.free(numString);
     index: for (1..numString.len) |i| {
@@ -251,11 +209,11 @@ test "part2small" {
 }
 
 // runs in 4m 12s 785ms on my Framework laptop
-// test "part2main" {
-//     const alloc = testing.allocator;
-//     const input_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/2025/day2/main.txt", std.math.maxInt(u32));
-//     defer alloc.free(input_string);
+test "part2main" {
+    const alloc = testing.allocator;
+    const input_string = try std.fs.cwd().readFileAlloc(alloc, "inputs/2025/day2/main.txt", std.math.maxInt(u32));
+    defer alloc.free(input_string);
 
-//     const sum = try part2(alloc, input_string);
-//     try testing.expectEqual(54486209192, sum);
-// }
+    const sum = try part2(alloc, input_string);
+    try testing.expectEqual(54486209192, sum);
+}
